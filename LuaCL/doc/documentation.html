@@ -1,0 +1,193 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+  <TITLE> Documentation </TITLE>
+  <link rel="stylesheet" href="style.css" type="text/css"> 
+ </HEAD>
+
+ <BODY>
+	
+	<table align="center">
+		<tr>
+			<td colspan="7"><h1 align="center">LuaCL</h1></td>
+		</tr>
+		<tr>
+			<td colspan="7" align="center"><h3>Lua binding for OpenCL</h3></td>
+		</tr>
+		<tr class="links">
+			<td align="center"><a href="index.html">introduction</a></td>
+			<td>|</td>
+			<td align="center"><a href="documentation.html">documentation</a></td>
+			<td>|</td>
+			<td align="center"><a href="installation.html">installation</a></td>
+			<td>|</td>
+			<td align="center"><a href="wrapper.html">wrapper</a></td>
+		</tr>
+	</table>
+
+	<hr>
+
+	<h1>Documentation</h1>
+	<p>For further description about functions and functions parameters see OpenCL specification.</p>
+	<h2>Notes</h2>
+	<h3>OpenCL data types</h3>
+	<p>Due to memory allocations and data accesing in binary module, the additional parameter <span class="spec">string type</span> must be passed to a function calls operating with memory objects. This additional parameter specifies the element data type in memory object. The following data types passed as an argumnet are allowed:
+	<ul type="circle">
+		<li><span class="spec">"char"</span> or <span class="spec">"char<i>n</i>"</span></li>
+		<li><span class="spec">"uchar"</span> or <span class="spec">"uchar<i>n</i>"</span></li>
+		<li><span class="spec">"short"</span> or <span class="spec">"short<i>n</i>"</span></li>
+		<li><span class="spec">"ushort"</span> or <span class="spec">"ushort<i>n</i>"</span></li>
+		<li><span class="spec">"int"</span> or <span class="spec">"int<i>n</i>"</span></li>
+		<li><span class="spec">"uint"</span> or <span class="spec">"uint<i>n</i>"</span></li>
+		<li><span class="spec">"long"</span> or <span class="spec">"long<i>n</i>"</span></li>
+		<li><span class="spec">"ulong"</span> or <span class="spec">"ulong<i>n</i>"</span></li>
+		<li><span class="spec">"half"</span> or <span class="spec">"half<i>n</i>"</span></li>
+		<li><span class="spec">"float"</span> or <span class="spec">"float<i>n</i>"</span></li>
+		<li><span class="spec">"double"</span> or <span class="spec">"double<i>n</i>"</span></li>
+	</ul>
+	</p>
+	<h3>Data representation</h3>
+	<p>Input and output data from memory objects are treated as a <span class="spec">table</span> indexed from <span class="spec">1-n</span>. Element in table represents scalar or vector number. Vector number are represented as a <span class="spec">table</span> indexed from <span class="spec">1-n</span>, where table elements are scalar.</p>
+	<div class="exam">
+		-- table with scalars "uint" <br />
+		local scalars = {1,2,3}<br />
+		-- table with vectors "uint4"<br />
+		local vectors = {{1,1,1,1}, {2,2,2,2}, {3,3,3,3}}
+	</div>
+	<h4>Size in bytes vs. size in elements</h4>
+	Functions argumnets representing any kind of size (buffer creation size, pixels, size of image row, ...) are treated as a size in elements, no as a size in bytes. Appropriete size in bytes required by OpenCL is computed in library module. 
+	<h3>Passing constants as an arguments</h3>
+	Constants defined by OpenCL can be passed as a number or string as well. <br />
+	<div class="exam">
+		CreateBuffer(..., 'CL_MEM_READ_ONLY, CL_MEM_COPY_HOST_PTR', ...)
+	</div>
+	<h3>Values in return</h3> 
+	<p>Every function returns error code specified by OpenCL. If any error occures, then error code is returned and other values are set to <span class="spec">nil</span>.</p> 
+	<br />
+	<h2>Functions</h2>
+		<span class="func">number error = <br /><b>Barrier</b>(userdata queue)</span>
+		<hr>
+		<span class="func">[number, string] data, number error = <br /><b>BuildInfo</b>(userdata program, userdata device, number param)</span>
+		<hr>
+		<span class="func">number error = <br /><b>BuildProgram</b>(userdata program, table devices)</span>
+		<hr>
+		<span class="func">[number, table] data, number error = <br /><b>ContextInfo</b>(userdata context, number param)</span>
+		<hr>
+		<span class="func">userdata event, number error = <br /><b>CopyBuffer</b>(userdata queue, userdata src, userdata dst, string type, number src_offset, number dst_offset, number size [, table events])</span>
+		<hr>
+		<span class="func">userdata event, number error = <br /><b>CopyBufferToImage</b>(userdata queue, userdata src, userdata dst, string type, number src_offset, table dst_origin, table dst_region [, table events]))</span>
+		<hr>
+		<span class="func">userdata event, number error = <br /><b>CopyImage</b>(userdata queue, userdata src, userdata dst, table src_origin, table dst_origin, table region [, table events]))</span>
+		<hr>
+		<span class="func">userdata event, number error = <br /><b>CopyImageToBuffer</b>(userdata queue, userdata src, userdata dst, string type, number src_offset, number dst_offset, number size [, table events]))</span>
+		<hr>
+		<span class="func">userdata buffer, number error = <br /><b>CreateBuffer</b>(userdata context, number param, string type, [number, table] data)</span>
+		<hr>
+		<span class="func">userdata context, number error = <br /><b>CreateContext</b>(table properties, table devices)</span>
+		<hr>
+		<span class="func">userdata context, number error = <br /><b>CreateContextFromType</b>(table properties, number param)</span>
+		<hr>
+		<span class="func">userdata image2D, number error = <br /><b>CreateImage2D</b>(userdata context, number param, table format, number width, number height [, string type, table data])</span>
+		<hr>
+		<span class="func">userdata image3D, number error = <br /><b>CreateImage3D</b>(userdata context, number param, table format, number width, number height, number depth [, string type, table data])</span>
+		<hr>
+		<span class="func">userdata kernel, number error = <br /><b>CreateKernel</b>(userdata program, string name)</span>
+		<hr>
+		<span class="func">table kernels, number error = <br /><b>CreateKernels</b>(userdata program)</span>
+		<hr>
+		<span class="func">userdata program, number error = <br /><b>CreateProgram</b>(userdata context, string source)</span>
+		<hr>
+		<span class="func">userdata queue, number error = <br /><b>CreateQueue</b>(userdata context, userdata device [, number properties])</span>
+		<hr>
+		<span class="func">userdata sampler, number error = <br /><b>CreateSampler</b>(userdata context, number norm_coords, number addr_mode, number filter_mode)</span>
+		<hr>
+		<span class="func">table devices, number error = <br /><b>DeviceIDs</b>(userdata platform, number param [, number max_devices])</span>
+		<hr>
+		<span class="func">[number, string, table, userdata] data, number error = <br /><b>DeviceInfo</b>(userdata device, number param)</span>
+		<hr>
+		<span class="func">[number, userdata] data, number error = <br /><b>EventInfo</b>(userdata event, number param)</span>
+		<hr>
+		<span class="func">number data, number error = <br /><b>EventProfilingInfo</b>(userdata event, number param)</span>
+		<hr>
+		<span class="func">number error = <br /><b>Finish</b>(userdata queue)</span>
+		<hr>
+		<span class="func">number error = <br /><b>Flush</b>(userdata queue)</span>
+		<hr>
+		<span class="func">[number, table] data, number error = <br /><b>ImageInfo</b>(userdata image, number param)</span>
+		<hr>
+		<span class="func">[string, number, userdata] data, number error = <br /><b>KernelInfo</b>(userdata kernel, number param)</span>
+		<hr>
+		<span class="func">[number, table] data, number error = <br /><b>KernelWorkGroupInfo</b>(userdata kernel, userdata device, number param)</span>
+		<hr>
+		<span class="func">userdata event, number error = <br /><b>Marker</b>(userdata queue)</span>
+		<hr>
+		<span class="func">[number, userdata] data, number error = <br /><b>MemInfo</b>(userdata mem_obj, number param)</span>
+		<hr>
+		<span class="func">userdata event, number error = <br /><b>NDRangeKernel</b>(userdata queue, userdata kernel, table work_offset, table global_size, table local_size [, table events])</span>
+		<hr>
+		<span class="func">userdata platform, number error = <br /><b>PlatformIDs</b>([number max_platforms])</span>
+		<hr>
+		<span class="func">string data, number error = <br /><b>PlatformInfo</b>(userdata platform, number param)</span>
+		<hr>
+		<span class="func">[number, table, userdata, string] data, number error = <br /><b>ProgramInfo</b>(userdata program, number param)</span>
+		<hr>
+		<span class="func">[number, userdata] data, number error = <br /><b>QueueInfo</b>(userdata queue, number param)</span>
+		<hr>
+		<span class="func">number old_property, number error = <br /><b>QueueProperty</b>(userdata queue, number param, number enable)</span>
+		<hr>
+		<span class="func">table data, userdata event, number error = <br /><b>ReadBuffer</b>(userdata queue, userdata buffer, number blocking_read, string type, number offset, number size [, table events])</span>
+		<hr>
+		<span class="func">table data, userdata event, number error = <br /><b>ReadImage</b>(userdata queue, userdata image, number blocking_read, table origin, table region, number row_pitch, number slice_pitch, string type [, table events])</span>
+		<hr>
+		<span class="func">number error = <br /><b>ReleaseContext</b>(userdata context)</span>
+		<hr>
+		<span class="func">number error = <br /><b>ReleaseEvent</b>(userdata event)</span>
+		<hr>
+		<span class="func">number error = <br /><b>ReleaseKernel</b>(userdata kernel)</span>
+		<hr>
+		<span class="func">number error = <br /><b>ReleaseMem</b>(userdata mem_obj)</span>
+		<hr>
+		<span class="func">number error = <br /><b>ReleaseProgram</b>(userdata program)</span>
+		<hr>
+		<span class="func">number error = <br /><b>ReleaseQueue</b>(userdata queue)</span>
+		<hr>
+		<span class="func">number error = <br /><b>ReleaseSampler</b>(userdata sampler)</span>
+		<hr>
+		<span class="func">number error = <br /><b>RetainContext</b>(userdata context)</span>
+		<hr>
+		<span class="func">number error = <br /><b>RetainEvent</b>(userdata event)</span>
+		<hr>
+		<span class="func">number error = <br /><b>RetainKernel</b>(userdata kernel)</span>
+		<hr>
+		<span class="func">number error = <br /><b>RetainMem</b>(userdata mem_obj)</span>
+		<hr>
+		<span class="func">number error = <br /><b>RetainProgram</b>(userdata program)</span>
+		<hr>
+		<span class="func">number error = <br /><b>RetainQueue</b>(userdata queue)</span>
+		<hr>
+		<span class="func">number error = <br /><b>RetainSampler</b>(userdata sampler)</span>
+		<hr>
+		<span class="func">[number, userdata] data, number error = <br /><b>SamplerInfo</b>(userdata sampler, number param)</span>
+		<hr>
+		<span class="func">number error = <br /><b>SetKernelArg</b>(userdata kernel, number position, userdata object)</span>
+		<hr>
+		<span class="func">userdata subbuffer, number error = <br /><b>SubBuffer</b>(userdata buffer, number param,  number creation_type, table creation_info, string type)</span>
+		<hr>
+		<span class="func">table data, number error = <br /><b>SupportedImageFormats</b>(userdata context, number param, number image_type)</span>
+		<hr>
+		<span class="func">userdata event, number error = <br /><b>Task</b>(userdata queue, userdata kernel [, table events])</span>
+		<hr>
+		<span class="func">number error = <br /><b>UnloadCompiler</b>()</span>
+		<hr>
+		<span class="func">number error = <br /><b>Wait</b>(table events)</span>
+		<hr>
+		<span class="func">number error = <br /><b>WaitForEvents</b>(userdata queue, table events)</span>
+		<hr>
+		<span class="func">userdata event, number error = <br /><b>WriteBuffer</b>(userdata queue, userdata buffer, number blocking_read, string type, number offset, table data [, table events])</span>
+		<hr>
+		<span class="func">userdata event, number error = <br /><b>WriteImage</b>(userdata queue, userdata image, number blocking_read, table origin, table region, number row_pitch, number slice_pitch, table data, string type [, table events])</span>
+		<hr>
+
+
+ </BODY>
+</HTML>
