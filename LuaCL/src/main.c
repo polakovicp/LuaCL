@@ -74,8 +74,6 @@ void write_host_buffer(lua_State * L, size_t sz, TYPE t, unsigned int csize, voi
 void read_host_buffer(lua_State * L, int pos, TYPE t, unsigned int csize, void* buff)
 {
     cl_uint i,p,j;
-	if(!lua_istable(L, pos))
-		luaL_typerror(L, pos, "table");
     size_t size = lua_objlen(L, pos);
     for(i = 0, p=0; i < size*csize; p++, i+=csize)
     {
@@ -256,6 +254,7 @@ void * host_alloc(TYPE *t, size_t size, unsigned int * csize)
 		case type_cl_double16	: *csize=16; *t = type_cl_double; break;
         default : *csize = 1;
     }
+
     switch(*t)
     {
         case type_cl_char   : buff_char = (cl_char *) malloc(size*sizeof(cl_char)*(*csize));
@@ -557,8 +556,14 @@ static int releaseContext(lua_State * L)
 static int createCommandQueue(lua_State * L)
 {
     cl_int err;
-    cl_command_queue command_queue = clCreateCommandQueue((cl_context)lua_touserdata(L, 1), (cl_device_id) lua_touserdata(L, 2), lua_tonumber(L, 3), &err);
-    (err != CL_SUCCESS) ? lua_pushnil(L) : lua_pushlightuserdata(L, command_queue);
+	cl_command_queue_properties props = 0;
+    cl_command_queue command_queue;
+
+	if(lua_gettop(L) == 3)
+		props = get_enum(L, 3, cl_const);
+	command_queue  = clCreateCommandQueue((cl_context)lua_touserdata(L, 1), (cl_device_id) lua_touserdata(L, 2), props, &err);
+
+	(err != CL_SUCCESS) ? lua_pushnil(L) : lua_pushlightuserdata(L, command_queue);
     lua_pushnumber(L, err);
     return 2;
 }
@@ -590,7 +595,7 @@ static int newBuffer(lua_State * L)
 {
     cl_int err;
     cl_mem clbuffer;
-    cl_uint i, len = 0, component_size=1;
+    cl_uint len = 0, component_size=1;
     void * buffer = NULL;
     cl_mem_flags flags = get_enum(L, 2, cl_const);
     TYPE type = (TYPE) get_enum(L, 3, cl_const);
@@ -617,7 +622,7 @@ static int readBuffer(lua_State * L)
     cl_int err;
     cl_event event_ret;
     size_t buff_size = (size_t) luaL_checknumber(L, 6);
-    unsigned int i, componenet_size;
+    unsigned int componenet_size;
     void * buffer = NULL;
     TYPE type = (TYPE) get_enum(L, 4, cl_const);
 
@@ -653,7 +658,7 @@ static int writeBuffer(lua_State * L)
 {
     cl_event        event;
     cl_int          err;
-    unsigned int    i, component_size;
+    unsigned int    component_size;
     cl_uint         events_in_list = 0;
     cl_event *      event_list = NULL;
     void *          buffer = NULL;
@@ -869,7 +874,7 @@ static int enqueueNDRangeKernel(lua_State * L)
     if(local_work_size != NULL) free(local_work_size);
     lua_pushlightuserdata(L, event);
     lua_pushnumber(L, err);
-    return 1;
+    return 2;
 }
 
 //----------------------------------------------------------------FLUSH AND FINISH
@@ -1053,16 +1058,13 @@ static int createKernelsInProgram(lua_State * L)
 static int newImage2D(lua_State * L)
 {
     cl_int err;
-    unsigned int    i, component_size=1;
+    unsigned int    component_size=1;
     cl_mem_flags    flags;
     cl_image_format image_format;
     cl_mem          img;
     void *          buffer = NULL;
     TYPE            type;
     size_t          image_width, image_height, image_row_pitch = 0;
-
-	if(!lua_istable(L, 3))
-		luaL_typerror(L, 4, "table");	
 
     lua_rawgeti(L, 3, 1);
     image_format.image_channel_order        = (cl_channel_order) get_enum(L, -1, cl_const);
@@ -1075,13 +1077,13 @@ static int newImage2D(lua_State * L)
 
     image_width     = (size_t) lua_tonumber(L, 4);
     image_height    = (size_t) lua_tonumber(L, 5);
-    image_row_pitch = image_width;	
+    image_row_pitch = image_width;
 
     if((flags & CL_MEM_USE_HOST_PTR) || (flags & CL_MEM_COPY_HOST_PTR))
     {
 	type = (TYPE) get_enum(L, 6, cl_const);
-        buffer = host_alloc(&type, lua_objlen(L, 7), &component_size);  
-	read_host_buffer(L, 7, type, component_size, buffer); 
+        buffer = host_alloc(&type, lua_objlen(L, 7), &component_size);
+	read_host_buffer(L, 7, type, component_size, buffer);
     }
     else
     {
@@ -1117,11 +1119,6 @@ static int readImage(lua_State * L)														// TODO BUGGY
     cl_bool         param_name = (cl_bool)  get_enum(L, 3, cl_const);
     events_in_list = get_events(&L, event_list, 9);
 
-	if(!lua_istable(L, 4))
-		luaL_typerror(L, 4, "table");	
-	if(!lua_istable(L, 5))
-		luaL_typerror(L, 5, "table");
-	
     for(i=0; i < 3; i++)
     {
         lua_rawgeti(L, 4, i+1);
@@ -1166,7 +1163,7 @@ static int writeImage(lua_State * L)
     size_t buff_size = 1;
     void * buffer = NULL;
 
-    TYPE type = (TYPE) get_enum(L, 8, cl_const);
+    TYPE type = (TYPE) get_enum(L, 9, cl_const);
     size_t row_pitch = luaL_checknumber(L, 6)*sizeof_t(type);
     size_t slice_pitch = luaL_checknumber(L, 7)*sizeof_t(type);
     cl_uint         events_in_list = 0;
@@ -1174,11 +1171,6 @@ static int writeImage(lua_State * L)
     cl_bool         param_name = (cl_bool)  get_enum(L, 3, cl_const);
     events_in_list = get_events(&L, event_list, 7);
 
-	if(!lua_istable(L, 4))
-		luaL_typerror(L, 4, "table");	
-	if(!lua_istable(L, 5))
-		luaL_typerror(L, 5, "table");
-	
     for(i=0; i < 3; i++)
     {
         lua_rawgeti(L, 4, i+1);
@@ -1189,15 +1181,10 @@ static int writeImage(lua_State * L)
         lua_remove(L, -1);
 	buff_size  *=  region[i] - origin[i];
     }
-    buffer = host_alloc(&type, lua_objlen(L, 9), &component_size);
-    if(buffer == NULL)
-    {
-	    lua_pushnil(L);
-        lua_pushnumber(L, -30);
-        return 2;
-	}
+    buffer = host_alloc(&type, buff_size, &component_size);
+    if(buffer == NULL) return 0;
 
-    read_host_buffer(L, 9, type, component_size, buffer);
+    read_host_buffer(L, 8, type, component_size, buffer);
 
     err = clEnqueueWriteImage((cl_command_queue) lua_touserdata(L, 1),
 						(cl_mem) lua_touserdata(L, 2), param_name,
@@ -1232,13 +1219,6 @@ static int copyImage(lua_State * L)
     cl_event *      event_list = NULL;
     events_in_list = get_events(&L, event_list, 7);
 
-	if(!lua_istable(L, 4))
-		luaL_typerror(L, 4, "table");	
-	if(!lua_istable(L, 5))
-		luaL_typerror(L, 5, "table");
-	if(!lua_istable(L, 6))
-		luaL_typerror(L, 6, "table");
-	
     for(i=0; i < 3; i++)
     {
         lua_rawgeti(L, 4, i+1);
@@ -1247,7 +1227,7 @@ static int copyImage(lua_State * L)
         lua_rawgeti(L, 5, i+1);
         dst_origin[i] = (size_t) luaL_checknumber(L, -1);
         lua_remove(L, -1);
-	lua_rawgeti(L, 6, i+1);
+        lua_rawgeti(L, 6, i+1);
         region[i] = (size_t) luaL_checknumber(L, -1);
         lua_remove(L, -1);
     }
@@ -1270,23 +1250,21 @@ static int copyImage(lua_State * L)
 static int newImage3D(lua_State * L)
 {
     cl_int err;
-    unsigned int    i, component_size = 1;
+    unsigned int    component_size = 1;
     cl_mem_flags    flags;
     cl_image_format image_format;
     cl_mem          img;
     void *          buffer = NULL;
     TYPE            type;
     size_t          image_width, image_height, image_depth, image_row_pitch = 0, image_slice_pitch = 0;
-	
-	if(!lua_istable(L, 3))
-		luaL_typerror(L, 3, "table");
-	
+
     lua_rawgeti(L, 3, 1);
     image_format.image_channel_order        = (cl_channel_order) get_enum(L, -1, cl_const);
     lua_remove(L, -1);
     lua_rawgeti(L, 3, 2);
     image_format.image_channel_data_type    = (cl_channel_type) get_enum(L, -1, cl_const);
     lua_remove(L, -1);
+
     flags = get_enum(L, 2, cl_const);
 
     image_width     		= (size_t) luaL_checknumber(L, 4);
@@ -1294,6 +1272,7 @@ static int newImage3D(lua_State * L)
     image_depth		= (size_t) luaL_checknumber(L, 6);
     image_row_pitch    	= image_width;
     image_slice_pitch 	= image_row_pitch*image_height;
+
     if((flags & CL_MEM_USE_HOST_PTR) || (flags & CL_MEM_COPY_HOST_PTR))
     {
 	type = (TYPE) get_enum(L, 7, cl_const);
@@ -1671,12 +1650,15 @@ static int waitForEvents(lua_State * L)
     cl_uint         num_events;
     cl_event*       event_list;
 
+	if(!lua_istable(L, 1))
+		luaL_typerror(L, 1, "table");
+
     num_events = lua_objlen(L, 1);
     event_list = (cl_event *) malloc(num_events * sizeof(cl_event));
 
     for(i = 0; i < num_events; i++)
     {
-        lua_rawgeti(L, 2, i+1);
+        lua_rawgeti(L, 1, i+1);
         event_list[i] = (cl_event) lua_touserdata(L, -1);
     }
 
@@ -1797,16 +1779,16 @@ static int enqueueCopyImageToBuffer(lua_State * L)
     cl_event    event;
     cl_uint     events_in_list = 0;
     cl_event *  event_list = NULL;
-    TYPE type = (TYPE) get_enum(L, 7, cl_const);
+    TYPE type = (TYPE) get_enum(L, 4, cl_const);
     for(i = 0; i < 3; i++)
     {
-        lua_rawgeti(L, 4, i+1); src_origin[i]   = (size_t) luaL_checknumber(L, -1); lua_remove(L, -1);
-        lua_rawgeti(L, 5, i+1); region[i]       = (size_t) luaL_checknumber(L, -1); lua_remove(L, -1);
+        lua_rawgeti(L, 5, i+1); src_origin[i]   = (size_t) luaL_checknumber(L, -1); lua_remove(L, -1);
+        lua_rawgeti(L, 6, i+1); region[i]       = (size_t) luaL_checknumber(L, -1); lua_remove(L, -1);
     }
 
-    events_in_list = get_events(&L, event_list, 7);
+    events_in_list = get_events(&L, event_list, 8);
     err = clEnqueueCopyImageToBuffer((cl_command_queue) lua_touserdata(L, 1), (cl_mem) lua_touserdata(L, 2), (cl_mem) lua_touserdata(L, 3),
-                                     src_origin, region, (size_t) luaL_checknumber(L, 6) * sizeof_t(type),
+                                     src_origin, region, (size_t) luaL_checknumber(L, 7) * sizeof_t(type),
                                      events_in_list, event_list, &event
                                      );
 
@@ -1823,18 +1805,18 @@ static int enqueueCopyBufferToImage(lua_State * L)
     cl_event    event;
     cl_uint     events_in_list = 0;
     cl_event *  event_list = NULL;
-    TYPE type = (TYPE) get_enum(L, 7, cl_const);
+    TYPE type = (TYPE) get_enum(L, 4, cl_const);
 
     for(i = 0; i < 3; i++)
     {
-        lua_rawgeti(L, 5, i+1); dst_origin[i]   = (size_t) luaL_checknumber(L, -1); lua_remove(L, -1);
-        lua_rawgeti(L, 6, i+1); region[i]       = (size_t) luaL_checknumber(L, -1); lua_remove(L, -1);
+        lua_rawgeti(L, 6, i+1); dst_origin[i]   = (size_t) luaL_checknumber(L, -1); lua_remove(L, -1);
+        lua_rawgeti(L, 7, i+1); region[i]       = (size_t) luaL_checknumber(L, -1); lua_remove(L, -1);
     }
 
-    events_in_list = get_events(&L, event_list, 7);
+    events_in_list = get_events(&L, event_list, 8);
 
     err = clEnqueueCopyBufferToImage((cl_command_queue) lua_touserdata(L, 1), (cl_mem) lua_touserdata(L, 2), (cl_mem) lua_touserdata(L, 3),
-                                     (size_t) luaL_checknumber(L, 4)*sizeof_t(type), dst_origin, region,
+                                     (size_t) luaL_checknumber(L, 5)*sizeof_t(type), dst_origin, region,
                                      events_in_list, event_list, &event
                                      );
 
@@ -1880,6 +1862,9 @@ static int enqueueWaitForEvents(lua_State * L)
     cl_event * event_list;
     cl_uint num_events = (cl_uint) lua_objlen(L, 2);
 
+	if(!lua_istable(L, 2))
+		luaL_typerror(L, 2, "table");
+
     event_list = (cl_event *) malloc(num_events * sizeof(cl_event));
 
     for(i = 0; i < num_events; i++)
@@ -1899,8 +1884,7 @@ static int enqueueBarrier(lua_State * L)
     cl_int err;
     err = clEnqueueBarrier((cl_command_queue) lua_touserdata(L, 1));
     lua_pushnumber(L, err);
-    lua_pushnumber(L, err);
-    return 2;
+    return 1;
 }
 
 //---------------------------------------------------------
@@ -1961,7 +1945,6 @@ static const struct luaL_Reg LuaCL [] = {
     {"RetainKernel"                 , retainKernel},
     {"KernelInfo"                   , getKernelInfo},
     {"KernelWorkGroupInfo"          , getKernelWorkGroupInfo},
-    {"WaitForEvents"                , waitForEvents},
     {"EventInfo"                    , getEventInfo},
     {"RetainEvent"                  , retainEvent},
     {"ReleaseEvent"                 , releaseEvent},
@@ -1973,6 +1956,7 @@ static const struct luaL_Reg LuaCL [] = {
 
     {"Task"                         , enqueueTask},
     {"Marker"                       , enqueueMarker},
+    {"Wait"                         , waitForEvents},
     {"WaitForEvents"                , enqueueWaitForEvents},
     {"Barrier"                      , enqueueBarrier},
 #ifdef CL_VERSION_1_1
