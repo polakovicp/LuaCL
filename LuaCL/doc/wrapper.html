@@ -35,6 +35,58 @@
 		local context = lcl.NewContext('CL_DEVICE_TYPE_CPU') <br />
 	</div>
 	Wrapper lcl allows to create a context over default platform and one device specified in <span class="spec">NewContext</span>. If no argument is used, then default <span class="spec">CL_DEVICE_TYPE_CPU</span> parameter is used for creating a context.
+	<h2>Sample code</h2>
+	<div class="exam">
+		<span style="padding-left:0px">local lcl = require('lcl.core')</span><br />
+		<span style="padding-left:0px"></span><br />
+		<span style="padding-left:0px">print("Version:",lcl._VERSION)</span><br />
+		<span style="padding-left:0px"></span><br />
+		<span style="padding-left:0px">local function run_hello(str)</span><br />
+		<span style="padding-left:30px">	local src = [[</span><br />
+		<span style="padding-left:60px">		#pragma OPENCL EXTENSION cl_khr_byte_addressable_store : enable</span><br />
+		<span style="padding-left:60px">		__kernel void hello(__global uchar * output)</span><br />
+		<span style="padding-left:60px">		{</span><br />
+		<span style="padding-left:90px">			private char hello[] = "]].. str ..[[";</span><br />
+		<span style="padding-left:90px">			unsigned int tid = get_global_id(0);</span><br />
+		<span style="padding-left:90px">			output[tid] = hello[tid];</span><br />
+		<span style="padding-left:60px">		}</span><br />
+		<span style="padding-left:0px"></span><br />
+		<span style="padding-left:60px">		]]</span><br />
+		<span style="padding-left:0px"></span><br />
+		<span style="padding-left:30px">	local cx = lcl.NewContext()</span><br />
+		<span style="padding-left:0px"></span><br />
+		<span style="padding-left:30px">	local qe = cx.Queue()</span><br />
+		<span style="padding-left:0px"></span><br />
+		<span style="padding-left:30px">	local bu = cx.Buffer('CL_MEM_READ_WRITE', 'uchar', string.len(str))</span><br />
+		<span style="padding-left:0px"></span><br />
+		<span style="padding-left:30px">	local prog = cx.Build(src)</span><br />
+		<span style="padding-left:0px"></span><br />
+		<span style="padding-left:30px">	local krnl = prog.Kernel("hello")</span><br />
+		<span style="padding-left:0px"></span><br />
+		<span style="padding-left:30px">	krnl.SetArgs(bu)</span><br />
+		<span style="padding-left:0px"></span><br />
+		<span style="padding-left:30px">	qe.NDRange(krnl, {0}, {string.len(str)})</span><br />
+		<span style="padding-left:0px"></span><br />
+		<span style="padding-left:30px">	qe.Finish()</span><br />
+		<span style="padding-left:0px"></span><br />
+		<span style="padding-left:30px">	local output = qe.ReadBuffer(bu)</span><br />
+		<span style="padding-left:0px"></span><br />
+		<span style="padding-left:30px">	local o = ""</span><br />
+		<span style="padding-left:30px">	for i=1, #output do</span><br />
+		<span style="padding-left:60px">		o = o .. string.char(output[i])</span><br />
+		<span style="padding-left:30px">	end</span><br />
+		<span style="padding-left:0px"></span><br />
+		<span style="padding-left:30px">	print(o)</span><br />
+		<span style="padding-left:0px"></span><br />
+		<span style="padding-left:30px">	cx.Release()</span><br />
+		<span style="padding-left:30px">	qe.Release()</span><br />
+		<span style="padding-left:30px">	bu.Release()</span><br />
+		<span style="padding-left:30px">	prog.Release()</span><br />
+		<span style="padding-left:30px">	krnl.Release()</span><br />
+		<span style="padding-left:0px">end</span><br />
+		<span style="padding-left:0px"></span><br />
+		<span style="padding-left:0px">run_hello("Hello World!")</span><br />
+	</div>
 	<h4>Context</h4>
 	<span class="func">Queue queue, number error = <br /><b>Queue</b>([properties])</span><hr>
 	<span class="func">Sampler sampler, number error = <br /><b>Sampler</b>(string normalized_coords, string addresing_mode, string filter_mode)</span><hr>
@@ -82,6 +134,12 @@
 	<span class="func">table info, number error = <br /><b>Info</b>()</span><hr>
 	<span class="func">number error = <br /><b>Release</b>()</span><hr>
 	<h4>Program</h4>
+	<span class="func">userdata program = <br /><b>GetData</b>()</span><hr>
+	<span class="func">number error = <br /><b>Build</b>(table device)</span><hr>
+	<span class="func">Kernel kernel, number error = <br /><b>NewKernel</b>()</span><hr>
+	<span class="func">table info, number error = <br /><b>Info</b>()</span><hr>
+	<span class="func">table info, number error = <br /><b>BuildInfo</b>()</span><hr>
+	<span class="func">number error = <br /><b>Release</b>()</span><hr>
 	<h4>Kernel</h4>
 	<span class="func">number error = <br /><b>SetArgs</b>([[Buffer, Image] arg1, ...])</span><hr>
 	<span class="func">userdata kernel = <br /><b>GetData</b>()</span><hr>
