@@ -1876,7 +1876,7 @@ static int enqueueWaitForEvents(lua_State * L)
 
     err = clEnqueueWaitForEvents((cl_command_queue) lua_touserdata(L, 1), num_events, event_list);
     lua_pushnumber(L, err);
-    return 2;
+    return 1;
 }
 //----------------------------------------------------------------
 static int enqueueBarrier(lua_State * L)

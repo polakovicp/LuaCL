@@ -504,5 +504,12 @@ end
 
 return {
 	NewContext = NewContext,
+	NewQueue = NewQueue,
+	NewKernel = NewKernel,
+	NewProgram = NewProgram,
+	NewImage3D = NewImage3D,
+	NewImage2D = NewImage2D,
+	NewSampler = NewSampler,
+	NewBuffer = NewBuffer,
 	_VERSION = "1.0.0"
 }
