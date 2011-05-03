@@ -36,7 +36,9 @@
 
 #define mw(t)\
     if(csize==1)\
+    {\
         lua_pushnumber(L, *((t    *) buff + i));\
+    }\
     else\
     {\
         lua_newtable(L);\

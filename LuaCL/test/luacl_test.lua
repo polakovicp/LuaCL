@@ -12,7 +12,9 @@ function _print(t)
 end
 
 function CHK(...)
-	print(arg[1]..': Error '.. arg[#arg])
+	if arg[#arg] ~= cl.CL_SUCCESS then
+		print(arg[1]..': Error '.. arg[#arg])
+	end
 	if #arg > 2 then
 		return arg[2], arg[3]
 	else
@@ -36,18 +38,26 @@ function run(d, t)
 	CHK("WaitForEvents", cl.WaitForEvents(qe.GetData(), evnt))
 	_print(out)
 
+	cx.Release()
+	qe.Release()
+	b1.Release()
+	b2.Release()
 end
 
 
 data = {}
 for i=1, 100 do
-	data[i] = i
+	data[i] = i*(-1.1)
 end
 
-data2 = {}
-for i=1, 100 do
-	data2[i] = {i,i,i,i,i,i,i,i}
-end
-
+run(data, "char")
+run(data, "uchar")
+run(data, "short")
+run(data, "ushort")
 run(data, "int")
-run(data2, "uint8")
+run(data, "uint")
+run(data, "long")
+run(data, "ulong")
+run(data, "half")
+run(data, "float")
+run(data, "double")

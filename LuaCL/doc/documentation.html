@@ -2,11 +2,11 @@
 <HTML>
  <HEAD>
   <TITLE> Documentation </TITLE>
-  <link rel="stylesheet" href="style.css" type="text/css"> 
+  <link rel="stylesheet" href="style.css" type="text/css">
  </HEAD>
 
  <BODY>
-	
+
 	<table align="center">
 		<tr>
 			<td colspan="7"><h1 align="center">LuaCL</h1></td>
@@ -41,7 +41,7 @@
 		<li><span class="spec">"uint"</span> or <span class="spec">"uint<i>n</i>"</span></li>
 		<li><span class="spec">"long"</span> or <span class="spec">"long<i>n</i>"</span></li>
 		<li><span class="spec">"ulong"</span> or <span class="spec">"ulong<i>n</i>"</span></li>
-		<li><span class="spec">"half"</span> or <span class="spec">"half<i>n</i>"</span></li>
+		<li><span class="spec">"half"</span></li>
 		<li><span class="spec">"float"</span> or <span class="spec">"float<i>n</i>"</span></li>
 		<li><span class="spec">"double"</span> or <span class="spec">"double<i>n</i>"</span></li>
 	</ul>
@@ -55,14 +55,14 @@
 		local vectors = {{1,1,1,1}, {2,2,2,2}, {3,3,3,3}}
 	</div>
 	<h4>Size in bytes vs. size in elements</h4>
-	Functions argumnets representing any kind of size (buffer creation size, pixels, size of image row, ...) are treated as a size in elements, no as a size in bytes. Appropriete size in bytes required by OpenCL is computed in library module. 
+	Functions argumnets representing any kind of size (buffer creation size, pixels, size of image row, ...) are treated as a size in elements, no as a size in bytes. Appropriete size in bytes required by OpenCL is computed in library module.
 	<h3>Passing constants as an arguments</h3>
 	Constants defined by OpenCL can be passed as a number or string as well. <br />
 	<div class="exam">
 		CreateBuffer(..., 'CL_MEM_READ_ONLY, CL_MEM_COPY_HOST_PTR', ...)
 	</div>
-	<h3>Values in return</h3> 
-	<p>Every function returns error code specified by OpenCL. If any error occures, then error code is returned and other values are set to <span class="spec">nil</span>.</p> 
+	<h3>Values in return</h3>
+	<p>Every function returns error code specified by OpenCL. If any error occures, then error code is returned and other values are set to <span class="spec">nil</span>.</p>
 	<br />
 	<h2>Functions</h2>
 		<span class="func">number error = <br /><b>Barrier</b>(userdata queue)</span>

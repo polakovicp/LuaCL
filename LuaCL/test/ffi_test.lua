@@ -1,78 +1,53 @@
 local cl = require("cl")
 local ffi = require( "ffi" )
-local bit = require( "bit" )
 
-SIZE = 100
-ISIZE = {}
-ISIZE["x"] = 5
-ISIZE["y"] = 10
+function run(d, t)
 
-local function BuffSource(c)
-	return	[[
-			__kernel void mul(__global const uint* input, __global  uint* output)
-			{
-				int i = get_global_id(0);
-				if (i < ]].. c ..[[)
-				output[i] = input[i]+10;
-			}
-			]]
-end
+	pl = ffi.new("cl_platform_id[1]")
+	cl.clGetPlatformIDs(1, pl, NULL)
 
-local function ImgSource(c)
-	return	[[
-			__kernel void mul(__read_only image2d_t input, __write_only image2d_t output)
-			{
-				const sampler_t sampler = CLK_NORMALIZED_COORDS_FALSE |
-								CLK_ADDRESS_REPEAT |
-								CLK_FILTER_NEAREST;
-				int2 coord = (int2)(get_global_id(0), get_global_id(1));
-				uint4 val = read_imageui(input, sampler, coord);
-				val.x = val.x * ]].. c ..[[;
-				write_imageui(output, coord, val);
-			}
-			]]
-end
+	de = ffi.new("cl_device_id[1]")
+	cl.clGetDeviceIDs(pl[0], cl.CL_DEVICE_TYPE_CPU, 1, de, nil)
 
-local function BufferRun(cx, queue)
+	cx = cl.clCreateContext(nil, 1, de, nil, nil, nil)
 
-	local err = ffi.new("cl_int[1]")
+	qe = cl.clCreateCommandQueue(cx, de[0], 0, nil)
 
-	local data = ffi.new("[?]", count)
-	for i=0, count-1 do
-		in_data[i] = (i+10)
+	b1 = cl.clCreateBuffer(cx, cl.CL_MEM_READ_WRITE, #data*ffi.sizeof(t), NULL, NULL)
+	b2 = cl.clCreateBuffer(cx, cl.CL_MEM_READ_WRITE, #data*ffi.sizeof(t), NULL, NULL)
+
+	indata = ffi.new(t.."[?]", #d, d)
+	cl.clEnqueueWriteBuffer(qe, b1, cl.CL_TRUE, 0, #data*ffi.sizeof(t), indata, 0, nil, nil)
+
+	cl.clEnqueueCopyBuffer(qe, b1, b2, 0, 0, #data*ffi.sizeof(t), 0, nil, nil)
+
+	outdata = ffi.new(t.."[?]", #d, d)
+	cl.clEnqueueReadBuffer(qe, b2, cl.CL_TRUE, 0, #data*ffi.sizeof(t), outdata, 0, nil, nil)
+
+	for i=0, #d-1 do
+		print(outdata[i])
 	end
 
-	buf = {}
-	buf.read, e = cx:Buffer("CL_MEM_READ_ONLY, CL_MEM_COPY_HOST_PTR", "cl_uint", #data, data)
-	buf.write = cx:Buffer("CL_MEM_WRITE_ONLY", "cl_uint", #data)
+	cl.clReleaseContext(cx)
+	cl.clReleaseCommandQueue(qe)
+	cl.clReleaseMemObject(b1)
+	cl.clReleaseMemObject(b2)
 
-	prog,e = cx:Build(BuffSource(SIZE))
-	kernel,e = prog:CreateKernel("mul")
-	kernel:SetArgs(buf.read, buf.write)
-
-	queue:NDRange(kernel, 1, {0,0,0}, {SIZE,0,0}, nil)
-	out = queue:Read(buf.write, #data)
-	for i=1, SIZE do
-		io.write(out[i], "\t")
-		if i%10 == 0 then io.write("\n") end
-	end
-
-	buf.read:Release()
-	buf.write:Release()
-	prog:Release()
-	kernel:Release()
 end
 
-platforms = ffi.new( "cl_platform_id[1]")
-cl.clGetPlatformIDs( 1, platforms, nil )
-device = ffi.new("cl_device_id[1]")
-cl.clGetDeviceIDs(platforms[0], cl.CL_DEVICE_TYPE_CPU, 1, device, nil)
-context = ffi.new("cl_context *")
-context = cl.clCreateContext(nil, 1, device, nil, nil, ret)
+data = {}
+for i=1, 100 do
+	data[i] = i*(-1.1)
+end
 
-i,e = Context.Info(context)
-
-queue = ffi.new("cl_command_queue")
-queue = cl.clCreateCommandQueue(context, device[0], 0, nil)
-
-BufferRun(context, queue)
+run(data, "cl_char")
+run(data, "cl_uchar")
+run(data, "cl_short")
+run(data, "cl_ushort")
+run(data, "cl_int")
+run(data, "cl_uint")
+run(data, "cl_long")
+run(data, "cl_ulong")
+run(data, "cl_half")
+run(data, "cl_float")
+run(data, "cl_double")
