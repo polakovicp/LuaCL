@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+  <TITLE> LuaCL wrapper </TITLE>
+  <link rel="stylesheet" href="style.css" type="text/css"> 
+ </HEAD>
+
+ <BODY>
+	
+	<table align="center">
+		<tr>
+			<td colspan="7"><h1 align="center">LuaCL</h1></td>
+		</tr>
+		<tr>
+			<td colspan="7" align="center"><h3>Lua binding for OpenCL</h3></td>
+		</tr>
+		<tr class="links">
+			<td align="center"><a href="index.html">introduction</a></td>
+			<td>|</td>
+			<td align="center"><a href="documentation.html">documentation</a></td>
+			<td>|</td>
+			<td align="center"><a href="installation.html">installation</a></td>
+			<td>|</td>
+			<td align="center"><a href="wrapper.html">wrapper</a></td>
+		</tr>
+	</table>
+
+	<hr>
+
+	<h1>Wrapper</h1>
+	<p>LuaCL base functionality is wrapped to a lua objects, defined in additional wrapper. Using is quite straightforward:</p>
+	<div class="exam">
+		local lcl = require('lcl.core') <br /><br />
+		-- creating new context <br />
+		local context = lcl.NewContext('CL_DEVICE_TYPE_CPU') <br />
+	</div>
+	Wrapper lcl allows to create a context over default platform and one device specified in <span class="spec">NewContext</span>. If no argument is used, then default <span class="spec">CL_DEVICE_TYPE_CPU</span> parameter is used for creating a context.
+	<h2>Sample code</h2>
+	<div class="exam">
+		<span style="padding-left:0px">local lcl = require('lcl.core')</span><br />
+		<span style="padding-left:0px"></span><br />
+		<span style="padding-left:0px">print("Version:",lcl._VERSION)</span><br />
+		<span style="padding-left:0px"></span><br />
+		<span style="padding-left:0px">local function run_hello(str)</span><br />
+		<span style="padding-left:30px">	local src = [[</span><br />
+		<span style="padding-left:60px">		#pragma OPENCL EXTENSION cl_khr_byte_addressable_store : enable</span><br />
+		<span style="padding-left:60px">		__kernel void hello(__global uchar * output)</span><br />
+		<span style="padding-left:60px">		{</span><br />
+		<span style="padding-left:90px">			private char hello[] = "]].. str ..[[";</span><br />
+		<span style="padding-left:90px">			unsigned int tid = get_global_id(0);</span><br />
+		<span style="padding-left:90px">			output[tid] = hello[tid];</span><br />
+		<span style="padding-left:60px">		}</span><br />
+		<span style="padding-left:0px"></span><br />
+		<span style="padding-left:60px">		]]</span><br />
+		<span style="padding-left:0px"></span><br />
+		<span style="padding-left:30px">	local cx = lcl.NewContext()</span><br />
+		<span style="padding-left:0px"></span><br />
+		<span style="padding-left:30px">	local qe = cx.Queue()</span><br />
+		<span style="padding-left:0px"></span><br />
+		<span style="padding-left:30px">	local bu = cx.Buffer('CL_MEM_READ_WRITE', 'uchar', string.len(str))</span><br />
+		<span style="padding-left:0px"></span><br />
+		<span style="padding-left:30px">	local prog = cx.Build(src)</span><br />
+		<span style="padding-left:0px"></span><br />
+		<span style="padding-left:30px">	local krnl = prog.Kernel("hello")</span><br />
+		<span style="padding-left:0px"></span><br />
+		<span style="padding-left:30px">	krnl.SetArgs(bu)</span><br />
+		<span style="padding-left:0px"></span><br />
+		<span style="padding-left:30px">	qe.NDRange(krnl, {0}, {string.len(str)})</span><br />
+		<span style="padding-left:0px"></span><br />
+		<span style="padding-left:30px">	qe.Finish()</span><br />
+		<span style="padding-left:0px"></span><br />
+		<span style="padding-left:30px">	local output = qe.ReadBuffer(bu)</span><br />
+		<span style="padding-left:0px"></span><br />
+		<span style="padding-left:30px">	local o = ""</span><br />
+		<span style="padding-left:30px">	for i=1, #output do</span><br />
+		<span style="padding-left:60px">		o = o .. string.char(output[i])</span><br />
+		<span style="padding-left:30px">	end</span><br />
+		<span style="padding-left:0px"></span><br />
+		<span style="padding-left:30px">	print(o)</span><br />
+		<span style="padding-left:0px"></span><br />
+		<span style="padding-left:30px">	cx.Release()</span><br />
+		<span style="padding-left:30px">	qe.Release()</span><br />
+		<span style="padding-left:30px">	bu.Release()</span><br />
+		<span style="padding-left:30px">	prog.Release()</span><br />
+		<span style="padding-left:30px">	krnl.Release()</span><br />
+		<span style="padding-left:0px">end</span><br />
+		<span style="padding-left:0px"></span><br />
+		<span style="padding-left:0px">run_hello("Hello World!")</span><br />
+	</div>
+	<h4>Context</h4>
+	<span class="func">Queue queue, number error = <br /><b>Queue</b>([properties])</span><hr>
+	<span class="func">Sampler sampler, number error = <br /><b>Sampler</b>(string normalized_coords, string addresing_mode, string filter_mode)</span><hr>
+	<span class="func">table info, number error = <br /><b>GetDeviceInfo</b>()</span><hr>
+	<span class="func">table info, number error = <br /><b>GetPlatformInfo</b>()</span><hr>
+	<span class="func">table info, number error = <br /><b>Info</b>()</span><hr>
+	<span class="func">Buffer buffer, number error = <br /><b>Buffer</b>(number param, string type, [number, table] data)</span><hr>
+	<span class="func">Image2D, number error = <br /><b>Image2D</b>(number param, table format, number width, number height [, string type, table data])</span><hr>
+	<span class="func">number error = <br /><b>Image3D</b>(number param, table format, number width, number height, number depth [, string type, table data])</span><hr>
+	<span class="func">Program program, number error = <br /><b>Build</b>(string source)</span><hr>
+	<span class="func">number error = <br /><b>Release</b>()</span><hr>
+	<span class="func">userdata context = <br /><b>GetData</b>()</span><hr>
+	<h4>Sampler</h4>
+	<span class="func">userdata sampler, number error = <br /><b>GetData</b>()</span><hr>
+	<span class="func">table info, number error = <br /><b>Info</b>()</span><hr>
+	<span class="func">number error = <br /><b>Release</b>()</span><hr>
+	<h4>Queue</h4>
+	<span class="func">userdata event, number error = <br /><b>CopyBuffer</b>(Buffer src, Buffer dst [, number src_offset, number dst_offset, number size])</span><hr>
+	<span class="func">userdata event, number error = <br /><b>CopyImage</b>(Image src, Image dst [, table src_origin, table dst_origin, table region])</span><hr>
+	<span class="func">userdata event, number error = <br /><b>WriteBuffer</b>(Buffer buffer, table data)</span><hr>
+	<span class="func">userdata event, number error = <br /><b>WriteImage</b>(Image image, table data)</span><hr>
+	<span class="func">table data, userdata event, number error = <br /><b>ReadBuffer</b>(Buffer buffer)</span><hr>
+	<span class="func">table data, userdata event, number error = <br /><b>ReadImage</b>(Image image)</span><hr>
+	<span class="func">number error = <br /><b>Finish</b>()</span><hr>
+	<span class="func">userdata event, number error = <br /><b>NDRange</b>(table work_offset, table global_size [, table local_size])</span><hr>
+	<span class="func">userdata queue = <br /><b>GetData</b>()</span><hr>
+	<span class="func">table info, number error = <br /><b>Info</b>()</span><hr>
+	<span class="func">number error = <br /><b>Release</b>()</span><hr>
+	<h4>Buffer</h4>
+	<span class="func">string type = <br /><b>GetType</b>()</span><hr>
+	<span class="func">number size = <br /><b>GetSize</b>()</span><hr>
+	<span class="func">userdata buffer = <br /><b>GetData</b>()</span><hr>
+	<span class="func">table info, number error = <br /><b>Info</b>()</span><hr>
+	<span class="func">number error = <br /><b>Release</b>()</span><hr>
+	<h4>Image2D</h4>
+	<span class="func">string type = <br /><b>GetType</b>()</span><hr>
+	<span class="func">table size = <br /><b>GetSize</b>()</span><hr>
+	<span class="func">userdata image2D = <br /><b>GetData</b>()</span><hr>
+	<span class="func">table info, number error = <br /><b>Info</b>()</span><hr>
+	<span class="func">number error = <br /><b>Release</b>()</span><hr>
+	<h4>Image3D</h4>
+	<span class="func">string type = <br /><b>GetType</b>()</span><hr>
+	<span class="func">table size = <br /><b>GetSize</b>()</span><hr>
+	<span class="func">userdata image3D = <br /><b>GetData</b>()</span><hr>
+	<span class="func">table info, number error = <br /><b>Info</b>()</span><hr>
+	<span class="func">number error = <br /><b>Release</b>()</span><hr>
+	<h4>Program</h4>
+	<span class="func">userdata program = <br /><b>GetData</b>()</span><hr>
+	<span class="func">number error = <br /><b>Build</b>(table device)</span><hr>
+	<span class="func">Kernel kernel, number error = <br /><b>NewKernel</b>()</span><hr>
+	<span class="func">table info, number error = <br /><b>Info</b>()</span><hr>
+	<span class="func">table info, number error = <br /><b>BuildInfo</b>()</span><hr>
+	<span class="func">number error = <br /><b>Release</b>()</span><hr>
+	<h4>Kernel</h4>
+	<span class="func">number error = <br /><b>SetArgs</b>([[Buffer, Image] arg1, ...])</span><hr>
+	<span class="func">userdata kernel = <br /><b>GetData</b>()</span><hr>
+	<span class="func">table info, number error = <br /><b>Info</b>()</span><hr>
+	<span class="func">number error = <br /><b>Release</b>()</span><hr>
+ </BODY>
+</HTML>

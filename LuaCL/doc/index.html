@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+  <TITLE> LuaCL Home page </TITLE>
+  <link rel="stylesheet" href="style.css" type="text/css"> 
+ </HEAD>
+
+ <BODY>
+	
+	<table align="center">
+		<tr>
+			<td colspan="7"><h1 align="center">LuaCL</h1></td>
+		</tr>
+		<tr>
+			<td colspan="7" align="center"><h3>Lua binding for OpenCL</h3></td>
+		</tr>
+		<tr class="links">
+			<td align="center"><a href="index.html">introduction</a></td>
+			<td>|</td>
+			<td align="center"><a href="documentation.html">documentation</a></td>
+			<td>|</td>
+			<td align="center"><a href="installation.html">installation</a></td>
+			<td>|</td>
+			<td align="center"><a href="wrapper.html">wrapper</a></td>
+		</tr>
+	</table>
+
+	<hr>
+
+	<h1>Introduction</h1>
+	<p>LuaCL is a Lua extension library that binds OpenCL functionality to Lua code. The main goal of LuaCL is achieved by wrapping functions exported by OpenCL library into own functions passed as a table to Lua environment.</p>
+	<p>Currently supported version of OpenCL are both 1.0 and 1.1 .</p>
+
+	<h1>Thanks</h1>
+	<p>I would like thanks to Ing. Peter Drahos for his advice and leadership during creating this library. Special thanks goes to all, who is willing to share its acquired knowledges.</p>
+
+	<h1>Sample code</h1>
+	<div class="exam">
+<span style="padding-left:0px">local cl = require ('LuaCL')</span><br />
+<span style="padding-left:0px"></span><br />
+<span style="padding-left:0px">local function ERR_CHK(...)</span><br />
+<span style="padding-left:30px">	if table.getn(arg) == 2 then</span><br />
+<span style="padding-left:60px">		if arg[2] ~= cl.CL_SUCCESS then</span><br />
+<span style="padding-left:90px">			print("OpenCL error code:", arg[2])</span><br />
+<span style="padding-left:60px">		end</span><br />
+<span style="padding-left:60px">		return arg[1]</span><br />
+<span style="padding-left:30px">	elseif table.getn(arg) == 3 then</span><br />
+<span style="padding-left:60px">		if arg[3] ~= cl.CL_SUCCESS then</span><br />
+<span style="padding-left:90px">			print("OpenCL error code:", arg[3])</span><br />
+<span style="padding-left:60px">		end</span><br />
+<span style="padding-left:60px">		return arg[1], arg[2]</span><br />
+<span style="padding-left:30px">	else</span><br />
+<span style="padding-left:60px">		if arg[1] ~= cl.CL_SUCCESS then</span><br />
+<span style="padding-left:90px">			print("OpenCL error code:", arg[1])</span><br />
+<span style="padding-left:60px">		end</span><br />
+<span style="padding-left:60px">		return</span><br />
+<span style="padding-left:30px">	end</span><br />
+<span style="padding-left:0px">end</span><br />
+<span style="padding-left:0px"></span><br />
+<span style="padding-left:0px">local function run_hello(str)</span><br />
+<span style="padding-left:30px">	src = [[</span><br />
+<span style="padding-left:60px">		#pragma OPENCL EXTENSION cl_khr_byte_addressable_store : enable</span><br />
+<span style="padding-left:60px">		__kernel void hello(__global uchar * output)</span><br />
+<span style="padding-left:60px">		{</span><br />
+<span style="padding-left:90px">			private char hello[] = "]].. str ..[[";</span><br />
+<span style="padding-left:90px">			unsigned int tid = get_global_id(0);</span><br />
+<span style="padding-left:90px">			output[tid] = hello[tid];</span><br />
+<span style="padding-left:60px">		}</span><br />
+<span style="padding-left:0px"></span><br />
+<span style="padding-left:30px">	]]</span><br />
+<span style="padding-left:30px">	local platform = ERR_CHK(cl.PlatformIDs(1))</span><br />
+<span style="padding-left:30px">	local device = ERR_CHK(cl.DeviceIDs(platform[1],</span><br />
+<span style="padding-left:300px">										'CL_DEVICE_TYPE_CPU'))</span><br />
+<span style="padding-left:0px"></span><br />
+<span style="padding-left:30px">	local context = ERR_CHK(cl.CreateContext({'CL_CONTEXT_PLATFORM',</span><br />
+<span style="padding-left:330px">											platform[1]},</span><br />
+<span style="padding-left:330px">											device))</span><br />
+<span style="padding-left:0px"></span><br />
+<span style="padding-left:30px">	local queue = ERR_CHK(cl.CreateQueue(context,</span><br />
+<span style="padding-left:300px">										device[1],</span><br />
+<span style="padding-left:300px">										'CL_QUEUE_PROFILING_ENABLE'))</span><br />
+<span style="padding-left:0px"></span><br />
+<span style="padding-left:30px">	local program = ERR_CHK(cl.CreateProgram(context, src))</span><br />
+<span style="padding-left:30px">	ERR_CHK(cl.BuildProgram(program, device))</span><br />
+<span style="padding-left:0px"></span><br />
+<span style="padding-left:30px">	local outBuf = ERR_CHK(cl.CreateBuffer(context,</span><br />
+<span style="padding-left:300px">										'CL_MEM_WRITE_ONLY',</span><br />
+<span style="padding-left:300px">										"uchar",</span><br />
+<span style="padding-left:300px">										string.len(str)))</span><br />
+<span style="padding-left:0px"></span><br />
+<span style="padding-left:30px">	local kernel = ERR_CHK(cl.CreateKernel(program,</span><br />
+<span style="padding-left:330px">											"hello"))</span><br />
+<span style="padding-left:30px">	ERR_CHK(cl.SetKernelArg(kernel,</span><br />
+<span style="padding-left:210px">							0,</span><br />
+<span style="padding-left:210px">							outBuf))</span><br />
+<span style="padding-left:30px">	ERR_CHK(cl.NDRangeKernel(queue,</span><br />
+<span style="padding-left:210px">							kernel,</span><br />
+<span style="padding-left:210px">							{0},</span><br />
+<span style="padding-left:210px">							{string.len(str)},</span><br />
+<span style="padding-left:210px">							nil))</span><br />
+<span style="padding-left:0px"></span><br />
+<span style="padding-left:30px">	local output = ERR_CHK(cl.ReadBuffer(queue,</span><br />
+<span style="padding-left:300px">										outBuf,</span><br />
+<span style="padding-left:300px">										'CL_TRUE',</span><br />
+<span style="padding-left:300px">										"uchar",</span><br />
+<span style="padding-left:300px">										0,</span><br />
+<span style="padding-left:300px">										string.len(str)))</span><br />
+<span style="padding-left:30px">	o = ""</span><br />
+<span style="padding-left:30px">	for i=1, #output do</span><br />
+<span style="padding-left:60px">		o = o .. string.char(output[i])</span><br />
+<span style="padding-left:30px">	end</span><br />
+<span style="padding-left:0px"></span><br />
+<span style="padding-left:30px">	print(o)</span><br />
+<span style="padding-left:0px"></span><br />
+<span style="padding-left:30px">	cl.ReleaseContext(context)</span><br />
+<span style="padding-left:30px">	cl.ReleaseQueue(queue)</span><br />
+<span style="padding-left:30px">	cl.ReleaseMem(outBuf)</span><br />
+<span style="padding-left:30px">	cl.ReleaseKernel(kernel)</span><br />
+<span style="padding-left:30px">	cl.ReleaseProgram(program)</span><br />
+<span style="padding-left:0px">end</span><br />
+<span style="padding-left:0px"></span><br />
+<span style="padding-left:0px">run_hello("Hello World!")</span><br />
+<span style="padding-left:0px"></span><br />
+</div>
+ </BODY>
+</HTML>

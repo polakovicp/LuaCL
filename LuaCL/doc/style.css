@@ -1,0 +1,35 @@
+body
+{
+	font-family:Arial,Helvetica,sans-serif;
+}
+
+.links
+{
+	font-weight:bold;
+	font-size:90%;
+	color:blue;
+}
+.func
+{
+	font-style:italic;
+	font-family: Verdana, "Bookman";
+	font-size:80%;
+}
+.def
+{
+	font-size:80%;
+}
+.spec
+{
+	font-family: Verdana, "Bookman";
+	font-size:80%;
+}
+.exam
+{
+	background-color:#CCC;
+	width:900px;
+	font-family: Lucida Console, "Bookman";
+	font-size:80%;
+	margin:10px;
+	padding:10px;
+}
