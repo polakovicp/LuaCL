@@ -4,7 +4,7 @@ Adresarova struktura
 	=	bin
 		+	LuaCL.dll - kniznica pre Windows
 		+	LuaCL.so - kniznica pre Linux
-	=	doc - obsahuje dokumentáciu v html formate
+	=	doc - obsahuje dokumentaciu v html formate
 	=	samples
 		+	lcl - adresar s prikladmi pouzitia nadstavby lcl
 		+	luacl - adresar s prikladmi pouzitia LuaCL modulu
@@ -14,6 +14,6 @@ Adresarova struktura
 			*	core.lua - implementacia core funkcionality lcl modulu
 		+	cl.lua - vazba pre LuaJIT FFI
 		+	LuaCL.c - LuaCL zdrojovy subor
-		+	LuaCL.h - LuaCL hlavickový subor
+		+	LuaCL.h - LuaCL hlavickovy subor
 	=	test - adresar s testovacimi subormi
 	=	LICENSE
