@@ -1,19 +1,19 @@
-Adresárová štruktúra
+Adresarova struktura
 -	main.pdf - tento dokument
 -	LuaCL
 	=	bin
-		+	LuaCL.dll - knižnica pre Windows
-		+	LuaCL.so - knižnica pre Linux
-	=	doc - obsahuje dokumentáciu v html formáte
+		+	LuaCL.dll - kniznica pre Windows
+		+	LuaCL.so - kniznica pre Linux
+	=	doc - obsahuje dokumentáciu v html formate
 	=	samples
-		+	lcl - adresár s príkladmi použitia nadstavby lcl
-		+	luacl - adresár s príkladmi použitia LuaCL modulu
-		+	cl-luajit.lua - použitie väzby pre LuaJIT FFI
+		+	lcl - adresar s prikladmi pouzitia nadstavby lcl
+		+	luacl - adresar s prikladmi pouzitia LuaCL modulu
+		+	cl-luajit.lua - pouzitie vazby pre LuaJIT FFI
 	=	src
 		+	lcl
-			*	core.lua - implementácia core funkcionality lcl modulu
-		+	cl.lua - väzba pre LuaJIT FFI
-		+	LuaCL.c - LuaCL zdrojový súbor
-		+	LuaCL.h - LuaCL hlavièkový súbor
-	=	test - adresár s testovacími súbormi
+			*	core.lua - implementacia core funkcionality lcl modulu
+		+	cl.lua - vazba pre LuaJIT FFI
+		+	LuaCL.c - LuaCL zdrojovy subor
+		+	LuaCL.h - LuaCL hlavickový subor
+	=	test - adresar s testovacimi subormi
 	=	LICENSE
