@@ -1,0 +1,29 @@
+# depslib dependency file v1.0
+1414787324 source:/root/projects/vmHook/main.cpp
+	"vmhook.h"
+
+1414786089 /root/projects/vmHook/vmhook.h
+	<iostream>
+	<vixDiskLib.h>
+
+1414779503 /usr/lib/vmware-vix-disklib/include/vixDiskLib.h
+	<stdlib.h>
+	<stdarg.h>
+	"vm_basic_types.h"
+	"pshpack4.h"
+	"poppack.h"
+
+1414779503 /usr/lib/vmware-vix-disklib/include/vm_basic_types.h
+	<sys/types.h>
+	<inttypes.h>
+	<sys/types.h>
+	<sys/inttypes.h>
+	<sys/unistd.h>
+	<sys/types.h>
+	<stdint.h>
+	<unistd.h>
+	<inttypes.h>
+	<stdlib.h>
+	<stdint.h>
+	<stdint.h>
+
