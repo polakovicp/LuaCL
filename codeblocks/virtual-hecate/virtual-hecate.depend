@@ -1,0 +1,64 @@
+# depslib dependency file v1.0
+1416731642 source:/root/projects/codeblocks/virtual-hecate/hecate.cpp
+	"hecate.h"
+	"operation.h"
+	"disk.h"
+	"partition.h"
+
+1416605562 /root/projects/codeblocks/virtual-hecate/hecate.h
+	<iostream>
+	<fstream>
+
+1416649965 /root/projects/codeblocks/virtual-hecate/operation.h
+	<cstdint>
+	<fstream>
+
+1416608022 source:/root/projects/codeblocks/virtual-hecate/operation.cpp
+	"operation.h"
+	"disk.h"
+
+1416731671 /root/projects/codeblocks/virtual-hecate/disk.h
+	<cstdint>
+
+1416731882 source:/root/projects/codeblocks/virtual-hecate/disk.cpp
+	"disk.h"
+	<algorithm>
+	<cstring>
+
+1416731903 /root/projects/codeblocks/virtual-hecate/partition.h
+	"operation.h"
+	"ntfs.hpp"
+	"inode.hpp"
+	<cstdint>
+	<map>
+
+1416731930 source:/root/projects/codeblocks/virtual-hecate/partition.cpp
+	"partition.h"
+	<algorithm>
+	<cstring>
+
+1416734075 /root/projects/codeblocks/virtual-hecate/ntfs.hpp
+	<cstdint>
+
+1416654733 source:/root/projects/codeblocks/virtual-hecate/mft.cpp
+	"partition.h"
+
+1416781498 /root/projects/codeblocks/virtual-hecate/inode.hpp
+	"ntfs.hpp"
+	<cstdint>
+
+1416783077 source:/root/projects/codeblocks/virtual-hecate/inode.cpp
+	"inode.hpp"
+	"disk.h"
+	<cstddef>
+	<algorithm>
+	<cstring>
+	<iostream>
+
+1416680915 source:/root/projects/codeblocks/virtual-hecate/range.cpp
+	"range.hpp"
+
+1416680695 /root/projects/codeblocks/virtual-hecate/range.hpp
+	<cstdint>
+	<cstdlib>
+

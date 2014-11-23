@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="virtual-hecate" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/virtual-hecate" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/virtual-hecate" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-std=c++11" />
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+		</Compiler>
+		<Unit filename="disk.cpp" />
+		<Unit filename="disk.h" />
+		<Unit filename="hecate.cpp" />
+		<Unit filename="hecate.h" />
+		<Unit filename="inode.cpp" />
+		<Unit filename="inode.hpp" />
+		<Unit filename="mft.cpp" />
+		<Unit filename="ntfs.hpp" />
+		<Unit filename="operation.cpp" />
+		<Unit filename="operation.h" />
+		<Unit filename="partition.cpp" />
+		<Unit filename="partition.h" />
+		<Unit filename="range.cpp" />
+		<Unit filename="range.hpp" />
+		<Unit filename="virtual-hecate.cbp" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
