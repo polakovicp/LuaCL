@@ -1,26 +1,28 @@
 #include "range.hpp"
 
+#include <iostream>
+
 namespace Hecate
 {
     RangeLookupTable::RangeLookupTable()
     {
-        Root = NULL ;
+        Root = NULL;
     };
 
-    AVL_NODE * RangeLookupTable::Insert(RANGE * data, int * h)
+    AVL_NODE * RangeLookupTable::Insert(AVL_DATA * data, int * h)
     {
         this->Root = this->Buildtree(this->Root, data, h);
         return this->Root;
     };
 
-    AVL_NODE * RangeLookupTable::Buildtree(AVL_NODE * root, RANGE * data, int * h)
+    AVL_NODE * RangeLookupTable::Buildtree(AVL_NODE * root, AVL_DATA * data, int * h)
     {
         AVL_NODE * node1, * node2;
 
         if(root == NULL)
         {
             root = new AVL_NODE;
-            root->Range = data;
+            root->Data = data;
             root->Left = NULL;
             root->Right = NULL;
             root->Balance = 0;
@@ -28,7 +30,7 @@ namespace Hecate
             return root;
         }
 
-        if(data->Begin < root->Range->Begin)
+        if(data->Range->Begin < root->Data->Range->Begin)
         {
             // TODO remove recursion
             root->Left = RangeLookupTable::Buildtree(root->Left, data, h);
@@ -79,7 +81,7 @@ namespace Hecate
             }
         }
 
-        if(data->Begin > root->Range->Begin)
+        if(data->Range->Begin > root->Data->Range->Begin)
         {
             root->Right = RangeLookupTable::Buildtree(root->Right, data, h);
 
@@ -131,17 +133,29 @@ namespace Hecate
         return root;
     };
 
-    void RangeLookupTable::Display(AVL_NODE * root)
+    void RangeLookupTable::Display()
     {
-        if ( root != NULL )
+        this->DisplayNode(this->Root);
+    };
+
+    void RangeLookupTable::DisplayNode(AVL_NODE * node)
+    {
+        if (node != NULL)
         {
-            this->Display(root->Left);
-//            cout << root->Range->Begin << "\t";
-            this->Display(root->Right);
+            this->DisplayNode(node->Left);
+
+            std::cout   << node->Data->Inode->Record->MftRecordNumber
+                        << " (" << node->Data->Record->Instance << ") "
+                        << "["
+                        << node->Data->Range->Begin << "-" << node->Data->Range->End
+                        << "]"
+                        << std::endl;
+
+            this->DisplayNode(node->Right);
         }
     };
 
-    AVL_NODE * RangeLookupTable::Remove(AVL_NODE * root, RANGE * data, int *h)
+    AVL_NODE * RangeLookupTable::RemoveData(AVL_NODE * root, AVL_DATA * data, int *h)
     {
         AVL_NODE * node;
 
@@ -151,17 +165,17 @@ namespace Hecate
         }
         else
         {
-            if(data->Begin < root->Range->Begin)
+            if(data->Range->Begin < root->Data->Range->Begin)
             {
-                root->Left = this->Remove(root->Left, data, h);
+                root->Left = this->RemoveData(root->Left, data, h);
                 if(*h)
                     root = this->BalanceRight(root, h);
             }
             else
             {
-                if(data->Begin > root->Range->Begin)
+                if(data->Range->Begin > root->Data->Range->Begin)
                 {
-                    root->Right = this->Remove(root->Right, data, h);
+                    root->Right = this->RemoveData(root->Right, data, h);
                     if(*h)
                         root = this->BalanceLeft(root, h);
                 }
@@ -173,7 +187,7 @@ namespace Hecate
                         root = node->Left;
                         *h = 1;
 
-                        delete node->Range;
+                        delete node->Data;
                         delete node;
                     }
                     else
@@ -183,12 +197,12 @@ namespace Hecate
                             root = node->Right;
                             *h = 1;
 
-                            delete node->Range;
+                            delete node->Data;
                             delete node;
                         }
                         else
                         {
-                            node->Right = this->Remove(node->Right, node, h);
+                            node->Right = this->RemoveNode(node->Right, node, h);
                             if(*h)
                                 root = this->BalanceLeft(root, h);
                         }
@@ -200,23 +214,23 @@ namespace Hecate
         return root;
     };
 
-    AVL_NODE * RangeLookupTable::Remove(AVL_NODE * succ, AVL_NODE * node, int *h)
+    AVL_NODE * RangeLookupTable::RemoveNode(AVL_NODE * succ, AVL_NODE * node, int *h)
     {
         AVL_NODE * temp = succ;
 
         if (succ->Left != NULL)
         {
-            succ->Left = RangeLookupTable::Remove(succ->Left, node, h);
+            succ->Left = RangeLookupTable::RemoveNode(succ->Left, node, h);
             if(*h)
                 succ = RangeLookupTable::BalanceRight(succ, h);
         }
         else
         {
             temp = succ;
-            node->Range = succ->Range;
+            node->Data = succ->Data;
             succ = succ->Right;
 
-            delete temp->Range;
+            delete temp->Data;
             delete temp;
             *h = 1;
         }
@@ -356,7 +370,7 @@ namespace Hecate
             RangeLookupTable::Delete(root->Right);
         }
 
-        delete root->Range;
+        delete root->Data;
         delete root;
     };
 };

@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1416731642 source:/root/projects/codeblocks/virtual-hecate/hecate.cpp
+1416867264 source:/root/projects/codeblocks/virtual-hecate/hecate.cpp
 	"hecate.h"
 	"operation.h"
 	"disk.h"
@@ -9,11 +9,12 @@
 	<iostream>
 	<fstream>
 
-1416649965 /root/projects/codeblocks/virtual-hecate/operation.h
+1416867278 /root/projects/codeblocks/virtual-hecate/operation.h
+	"log.hpp"
 	<cstdint>
 	<fstream>
 
-1416608022 source:/root/projects/codeblocks/virtual-hecate/operation.cpp
+1416866144 source:/root/projects/codeblocks/virtual-hecate/operation.cpp
 	"operation.h"
 	"disk.h"
 
@@ -25,40 +26,63 @@
 	<algorithm>
 	<cstring>
 
-1416731903 /root/projects/codeblocks/virtual-hecate/partition.h
+1416864288 /root/projects/codeblocks/virtual-hecate/partition.h
 	"operation.h"
 	"ntfs.hpp"
 	"inode.hpp"
 	<cstdint>
 	<map>
 
-1416731930 source:/root/projects/codeblocks/virtual-hecate/partition.cpp
-	"partition.h"
+1417552585 source:/root/projects/codeblocks/virtual-hecate/partition.cpp
+	"partition.hpp"
 	<algorithm>
 	<cstring>
 
 1416734075 /root/projects/codeblocks/virtual-hecate/ntfs.hpp
 	<cstdint>
 
-1416654733 source:/root/projects/codeblocks/virtual-hecate/mft.cpp
-	"partition.h"
+1417553459 source:/root/projects/codeblocks/virtual-hecate/mft.cpp
+	"partition.hpp"
 
-1416781498 /root/projects/codeblocks/virtual-hecate/inode.hpp
+1417552605 /root/projects/codeblocks/virtual-hecate/inode.hpp
 	"ntfs.hpp"
+	"range.hpp"
 	<cstdint>
 
-1416783077 source:/root/projects/codeblocks/virtual-hecate/inode.cpp
+1417552568 source:/root/projects/codeblocks/virtual-hecate/inode.cpp
 	"inode.hpp"
-	"disk.h"
+	"disk.hpp"
+	"log.hpp"
 	<cstddef>
 	<algorithm>
 	<cstring>
 	<iostream>
 
-1416680915 source:/root/projects/codeblocks/virtual-hecate/range.cpp
+1417554522 source:/root/projects/codeblocks/virtual-hecate/range.cpp
 	"range.hpp"
+	<iostream>
 
-1416680695 /root/projects/codeblocks/virtual-hecate/range.hpp
+1417553658 /root/projects/codeblocks/virtual-hecate/range.hpp
+	"inode.hpp"
 	<cstdint>
 	<cstdlib>
+
+1416867210 /root/projects/codeblocks/virtual-hecate/log.hpp
+	<iostream>
+	<cstring>
+
+1416731671 /root/projects/codeblocks/virtual-hecate/disk.hpp
+	<cstdint>
+
+1417552580 /root/projects/codeblocks/virtual-hecate/partition.hpp
+	"operation.hpp"
+	"ntfs.hpp"
+	"inode.hpp"
+	<cstdint>
+	<map>
+
+1416867278 /root/projects/codeblocks/virtual-hecate/operation.hpp
+	"log.hpp"
+	<cstdint>
+	<fstream>
 

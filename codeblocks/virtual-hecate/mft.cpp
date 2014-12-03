@@ -1,12 +1,20 @@
-#include "partition.h"
+#include "partition.hpp"
 
 namespace Hecate
 {
     MftTable::MftTable(uint8_t * data, uint64_t len)
     {
         Inode * self = new Inode(data, len);
+        Insert(self);
+    };
 
-        Table.insert(TableItem(0, self));
+    void MftTable::Insert(Inode * inode)
+    {
+        uint32_t index = inode->Record->MftRecordNumber;
+
+        Table.insert(TableItem(index, inode));
+
+        inode->GetAttributesClustersRanges(this->RangeTable);
     };
 
     void MftTable::Update(OPERATION& op)
@@ -17,6 +25,8 @@ namespace Hecate
         /// 2) check if its data
         /// 2a) who own that data?
 
+        this->RangeTable.Display();
 
+        //op.Log->Debug("ede");
     };
 };

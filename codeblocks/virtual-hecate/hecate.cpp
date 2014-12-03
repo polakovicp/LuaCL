@@ -27,9 +27,12 @@ void ReadEvents(const char * log)
         Disk *      disk = NULL;
         PARTITION_ENTRY * pentry = NULL;
         Ntfs *      ntfs = NULL;
+        Logger      logger;
 
         while(!GetNextOperation(ifs, op))
         {
+            op.Log = &logger;
+
             cout << "Sector " << op.Sector << " Length " << op.Count << endl;
 
             /// 1) wait for MBR sector

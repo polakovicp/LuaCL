@@ -1,4 +1,4 @@
-#include "partition.h"
+#include "partition.hpp"
 #include <algorithm>
 #include <cstring>
 
@@ -19,7 +19,7 @@ namespace Hecate
     {
         if(this->Mft)
         {
-
+            this->Mft->Update(op);
         }
         else if(this->IsMftStartSector(op.Sector))
         {

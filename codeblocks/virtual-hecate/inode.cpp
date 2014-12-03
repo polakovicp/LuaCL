@@ -1,6 +1,6 @@
 #include "inode.hpp"
-#include "disk.h"
-
+#include "disk.hpp"
+#include "log.hpp"
 #include <cstddef>
 #include <algorithm>
 #include <cstring>
@@ -25,11 +25,9 @@ namespace Hecate
                 // TODO log
             }
         }
-
-        ProcessNonResidentAttribtues();
     };
 
-    void Inode::ProcessNonResidentAttribtues()
+    void Inode::GetAttributesClustersRanges(RangeLookupTable& table)
     {
         ATTR_RECORD * attr = (ATTR_RECORD *)((uint8_t *)this->Record + this->Record->AttrOfs);
 
@@ -60,32 +58,69 @@ namespace Hecate
                 {
                     if(((uint8_t *)attr + attr->MappingPairsOffset) < ((uint8_t *)this->Record + this->Record->BytesInUse))
                     {
-                        RUNLIST * rl = Inode::MappingPairsDecompress(attr);
+                        this->ProcessNonResidentAttribtuesRanges(table, attr);
                     }
                 }
                 break;
             case AT_END                             :
-                break;
+                return;
             }
 
             attr = (ATTR_RECORD *)((uint8_t *)attr + attr->Length);
         }
     };
 
-    RUNLIST * Inode::MappingPairsDecompress(ATTR_RECORD * attr)
+    void Inode::ProcessNonResidentAttribtuesRanges(RangeLookupTable& table, ATTR_RECORD * attr)
     {
-        VCN nvcn = attr->LowestVcn;
+        VCN vcn = attr->LowestVcn;
         LCN lcn = 0;
+        int64_t deltaxcn;
+        const uint8_t *buf;
+        const uint8_t *attr_end;
+        uint8_t b;
 
-        uint8_t * crl = (uint8_t *)attr + attr->MappingPairsOffset;
+        buf = (const uint8_t *)attr + attr->MappingPairsOffset;
+        attr_end = (const uint8_t*)attr + attr->Length;
 
-        VCN cvcn = nvcn;
-
-        while(!crl[0])
+        while (buf < attr_end && *buf)
         {
+            RANGE * range = new RANGE;
 
+            b = *buf & 0xf;
+
+            if (b)
+            {
+                for (deltaxcn = (int8_t)buf[b--]; b; b--)
+                    deltaxcn = (deltaxcn << 8) + buf[b];
+            }
+            else
+            {
+                // TODO error
+            }
+
+            vcn = deltaxcn;
+
+            if (!(*buf & 0xf0))
+            {
+                // TODO sparse
+            }
+            else
+            {
+                uint8_t b2 = *buf & 0xf;
+                b = b2 + ((*buf >> 4) & 0xf);
+
+                for (deltaxcn = (int8_t)buf[b--]; b > b2; b--)
+                    deltaxcn = (deltaxcn << 8) + buf[b];
+
+                lcn += deltaxcn;
+
+                range->Begin = lcn;
+                range->End = vcn + lcn;
+            }
+
+            table.Insert(this, attr, range);
+
+            buf += (*buf & 0xf) + ((*buf >> 4) & 0xf) + 1;
         }
-
-        return NULL;
     };
 };
