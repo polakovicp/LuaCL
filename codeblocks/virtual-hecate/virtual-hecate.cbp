@@ -34,17 +34,17 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="disk.cpp" />
-		<Unit filename="disk.h" />
+		<Unit filename="disk.hpp" />
 		<Unit filename="hecate.cpp" />
-		<Unit filename="hecate.h" />
+		<Unit filename="hecate.hpp" />
 		<Unit filename="inode.cpp" />
 		<Unit filename="inode.hpp" />
 		<Unit filename="mft.cpp" />
 		<Unit filename="ntfs.hpp" />
 		<Unit filename="operation.cpp" />
-		<Unit filename="operation.h" />
+		<Unit filename="operation.hpp" />
 		<Unit filename="partition.cpp" />
-		<Unit filename="partition.h" />
+		<Unit filename="partition.hpp" />
 		<Unit filename="range.cpp" />
 		<Unit filename="range.hpp" />
 		<Unit filename="virtual-hecate.cbp" />
