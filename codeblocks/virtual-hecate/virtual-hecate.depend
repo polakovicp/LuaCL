@@ -62,3 +62,71 @@
 	<cstdint>
 	<cstdlib>
 
+1417628100 source:d:\work\repositories\luacl\codeblocks\virtual-hecate\disk.cpp
+	"disk.h"
+	<algorithm>
+	<cstring>
+
+1417628100 d:\work\repositories\luacl\codeblocks\virtual-hecate\disk.h
+	<cstdint>
+
+1417636978 source:d:\work\repositories\luacl\codeblocks\virtual-hecate\hecate.cpp
+	"hecate.h"
+	"operation.h"
+	"disk.h"
+	"partition.h"
+
+1417629744 d:\work\repositories\luacl\codeblocks\virtual-hecate\hecate.h
+	"log.hpp"
+	<iostream>
+	<fstream>
+
+1417628100 d:\work\repositories\luacl\codeblocks\virtual-hecate\operation.h
+	<cstdint>
+	<fstream>
+
+1417628100 d:\work\repositories\luacl\codeblocks\virtual-hecate\partition.h
+	"operation.h"
+	"ntfs.hpp"
+	"inode.hpp"
+	<cstdint>
+	<map>
+
+1417628100 d:\work\repositories\luacl\codeblocks\virtual-hecate\ntfs.hpp
+	<cstdint>
+
+1417628240 d:\work\repositories\luacl\codeblocks\virtual-hecate\inode.hpp
+	"ntfs.hpp"
+	<cstdint>
+
+1417628253 source:d:\work\repositories\luacl\codeblocks\virtual-hecate\inode.cpp
+	"inode.hpp"
+	"disk.h"
+	<cstddef>
+	<algorithm>
+	<cstring>
+	<iostream>
+
+1417628100 source:d:\work\repositories\luacl\codeblocks\virtual-hecate\mft.cpp
+	"partition.h"
+
+1417628100 source:d:\work\repositories\luacl\codeblocks\virtual-hecate\operation.cpp
+	"operation.h"
+	"disk.h"
+
+1417628100 source:d:\work\repositories\luacl\codeblocks\virtual-hecate\partition.cpp
+	"partition.h"
+	<algorithm>
+	<cstring>
+
+1417628100 source:d:\work\repositories\luacl\codeblocks\virtual-hecate\range.cpp
+	"range.hpp"
+
+1417628100 d:\work\repositories\luacl\codeblocks\virtual-hecate\range.hpp
+	<cstdint>
+	<cstdlib>
+
+1417637271 d:\work\repositories\luacl\codeblocks\virtual-hecate\log.hpp
+	<iostream>
+	<fstream>
+

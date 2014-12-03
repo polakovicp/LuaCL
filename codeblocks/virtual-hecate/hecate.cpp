@@ -10,7 +10,13 @@ int main()
 {
     const char * log = "/root/projects/dc-file.txt";
 
-    ReadEvents(log);
+    //ReadEvents(log);
+
+    //Logging::Log f;
+
+    Logging::LOG << "meh";
+
+    class VHecate worker;
 
     return 0;
 }

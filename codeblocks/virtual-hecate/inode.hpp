@@ -12,6 +12,5 @@ namespace Hecate
         void ProcessNonResidentAttribtues();
     public:
         Inode(uint8_t * data, uint64_t len);
-        static RUNLIST * MappingPairsDecompress(ATTR_RECORD * attr);
     };
 };

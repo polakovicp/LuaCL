@@ -60,7 +60,7 @@ namespace Hecate
                 {
                     if(((uint8_t *)attr + attr->MappingPairsOffset) < ((uint8_t *)this->Record + this->Record->BytesInUse))
                     {
-                        RUNLIST * rl = Inode::MappingPairsDecompress(attr);
+
                     }
                 }
                 break;
@@ -70,22 +70,5 @@ namespace Hecate
 
             attr = (ATTR_RECORD *)((uint8_t *)attr + attr->Length);
         }
-    };
-
-    RUNLIST * Inode::MappingPairsDecompress(ATTR_RECORD * attr)
-    {
-        VCN nvcn = attr->LowestVcn;
-        LCN lcn = 0;
-
-        uint8_t * crl = (uint8_t *)attr + attr->MappingPairsOffset;
-
-        VCN cvcn = nvcn;
-
-        while(!crl[0])
-        {
-
-        }
-
-        return NULL;
     };
 };
