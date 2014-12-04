@@ -1,5 +1,5 @@
-#include "operation.h"
-#include "disk.h"
+#include "operation.hpp"
+#include "disk.hpp"
 
 namespace Hecate
 {

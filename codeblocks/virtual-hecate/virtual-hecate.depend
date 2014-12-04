@@ -1,55 +1,16 @@
 # depslib dependency file v1.0
-1416867264 source:/root/projects/codeblocks/virtual-hecate/hecate.cpp
-	"hecate.h"
-	"operation.h"
-	"disk.h"
-	"partition.h"
-
-1416605562 /root/projects/codeblocks/virtual-hecate/hecate.h
-	<iostream>
-	<fstream>
-
-1416867278 /root/projects/codeblocks/virtual-hecate/operation.h
-	"log.hpp"
-	<cstdint>
-	<fstream>
-
-1416866144 source:/root/projects/codeblocks/virtual-hecate/operation.cpp
-	"operation.h"
-	"disk.h"
-
-1416731671 /root/projects/codeblocks/virtual-hecate/disk.h
-	<cstdint>
-
-1416731882 source:/root/projects/codeblocks/virtual-hecate/disk.cpp
-	"disk.h"
+1417683227 source:d:\work\repositories\luacl\codeblocks\virtual-hecate\disk.cpp
+	"disk.hpp"
 	<algorithm>
 	<cstring>
 
-1416864288 /root/projects/codeblocks/virtual-hecate/partition.h
-	"operation.h"
-	"ntfs.hpp"
-	"inode.hpp"
-	<cstdint>
-	<map>
-
-1417552585 source:/root/projects/codeblocks/virtual-hecate/partition.cpp
-	"partition.hpp"
-	<algorithm>
-	<cstring>
-
-1416734075 /root/projects/codeblocks/virtual-hecate/ntfs.hpp
-	<cstdint>
-
-1417553459 source:/root/projects/codeblocks/virtual-hecate/mft.cpp
+1417683677 source:d:\work\repositories\luacl\codeblocks\virtual-hecate\hecate.cpp
+	"hecate.hpp"
+	"operation.hpp"
+	"disk.hpp"
 	"partition.hpp"
 
-1417552605 /root/projects/codeblocks/virtual-hecate/inode.hpp
-	"ntfs.hpp"
-	"range.hpp"
-	<cstdint>
-
-1417552568 source:/root/projects/codeblocks/virtual-hecate/inode.cpp
+1417682528 source:d:\work\repositories\luacl\codeblocks\virtual-hecate\inode.cpp
 	"inode.hpp"
 	"disk.hpp"
 	"log.hpp"
@@ -58,98 +19,55 @@
 	<cstring>
 	<iostream>
 
-1417554522 source:/root/projects/codeblocks/virtual-hecate/range.cpp
+1417682528 d:\work\repositories\luacl\codeblocks\virtual-hecate\inode.hpp
+	"ntfs.hpp"
 	"range.hpp"
-	<iostream>
+	<cstdint>
 
-1417553658 /root/projects/codeblocks/virtual-hecate/range.hpp
+1417628100 d:\work\repositories\luacl\codeblocks\virtual-hecate\ntfs.hpp
+	<cstdint>
+
+1417682528 d:\work\repositories\luacl\codeblocks\virtual-hecate\range.hpp
 	"inode.hpp"
 	<cstdint>
 	<cstdlib>
 
-<<<<<<< HEAD
-1416867210 /root/projects/codeblocks/virtual-hecate/log.hpp
+1417637289 d:\work\repositories\luacl\codeblocks\virtual-hecate\log.hpp
 	<iostream>
-	<cstring>
+	<fstream>
 
-1416731671 /root/projects/codeblocks/virtual-hecate/disk.hpp
-	<cstdint>
+1417683812 source:d:\work\repositories\luacl\codeblocks\virtual-hecate\mft.cpp
+	"partition.hpp"
 
-1417552580 /root/projects/codeblocks/virtual-hecate/partition.hpp
+1417684042 source:d:\work\repositories\luacl\codeblocks\virtual-hecate\operation.cpp
 	"operation.hpp"
-=======
-1417628100 source:d:\work\repositories\luacl\codeblocks\virtual-hecate\disk.cpp
-	"disk.h"
+	"disk.hpp"
+
+1417682528 source:d:\work\repositories\luacl\codeblocks\virtual-hecate\partition.cpp
+	"partition.hpp"
 	<algorithm>
 	<cstring>
 
-1417628100 d:\work\repositories\luacl\codeblocks\virtual-hecate\disk.h
+1417682528 source:d:\work\repositories\luacl\codeblocks\virtual-hecate\range.cpp
+	"range.hpp"
+	<iostream>
+
+1417683486 d:\work\repositories\luacl\codeblocks\virtual-hecate\disk.hpp
 	<cstdint>
 
-1417636978 source:d:\work\repositories\luacl\codeblocks\virtual-hecate\hecate.cpp
-	"hecate.h"
-	"operation.h"
-	"disk.h"
-	"partition.h"
-
-1417629744 d:\work\repositories\luacl\codeblocks\virtual-hecate\hecate.h
+1417629744 d:\work\repositories\luacl\codeblocks\virtual-hecate\hecate.hpp
 	"log.hpp"
 	<iostream>
 	<fstream>
 
-1417628100 d:\work\repositories\luacl\codeblocks\virtual-hecate\operation.h
+1417684364 d:\work\repositories\luacl\codeblocks\virtual-hecate\operation.hpp
 	<cstdint>
 	<fstream>
 
-1417628100 d:\work\repositories\luacl\codeblocks\virtual-hecate\partition.h
-	"operation.h"
->>>>>>> fa931fbecfc777dbbb0974f6530a612faae2af0b
+1417684029 d:\work\repositories\luacl\codeblocks\virtual-hecate\partition.hpp
+	"operation.hpp"
 	"ntfs.hpp"
 	"inode.hpp"
 	<cstdint>
 	<map>
-
-<<<<<<< HEAD
-1416867278 /root/projects/codeblocks/virtual-hecate/operation.hpp
-	"log.hpp"
-	<cstdint>
-=======
-1417628100 d:\work\repositories\luacl\codeblocks\virtual-hecate\ntfs.hpp
-	<cstdint>
-
-1417628240 d:\work\repositories\luacl\codeblocks\virtual-hecate\inode.hpp
-	"ntfs.hpp"
-	<cstdint>
-
-1417628253 source:d:\work\repositories\luacl\codeblocks\virtual-hecate\inode.cpp
-	"inode.hpp"
-	"disk.h"
-	<cstddef>
-	<algorithm>
-	<cstring>
-	<iostream>
-
-1417628100 source:d:\work\repositories\luacl\codeblocks\virtual-hecate\mft.cpp
-	"partition.h"
-
-1417628100 source:d:\work\repositories\luacl\codeblocks\virtual-hecate\operation.cpp
-	"operation.h"
-	"disk.h"
-
-1417628100 source:d:\work\repositories\luacl\codeblocks\virtual-hecate\partition.cpp
-	"partition.h"
-	<algorithm>
-	<cstring>
-
-1417628100 source:d:\work\repositories\luacl\codeblocks\virtual-hecate\range.cpp
-	"range.hpp"
-
-1417628100 d:\work\repositories\luacl\codeblocks\virtual-hecate\range.hpp
-	<cstdint>
-	<cstdlib>
-
-1417637271 d:\work\repositories\luacl\codeblocks\virtual-hecate\log.hpp
-	<iostream>
->>>>>>> fa931fbecfc777dbbb0974f6530a612faae2af0b
-	<fstream>
 

@@ -5,7 +5,6 @@ namespace Hecate
     MftTable::MftTable(uint8_t * data, uint64_t len)
     {
         Inode * self = new Inode(data, len);
-        Insert(self);
     };
 
     void MftTable::Insert(Inode * inode)

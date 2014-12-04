@@ -1,7 +1,7 @@
-#include "hecate.h"
-#include "operation.h"
-#include "disk.h"
-#include "partition.h"
+#include "hecate.hpp"
+#include "operation.hpp"
+#include "disk.hpp"
+#include "partition.hpp"
 
 using namespace std;
 using namespace Hecate;
@@ -33,12 +33,9 @@ void ReadEvents(const char * log)
         Disk *      disk = NULL;
         PARTITION_ENTRY * pentry = NULL;
         Ntfs *      ntfs = NULL;
-        Logger      logger;
 
         while(!GetNextOperation(ifs, op))
         {
-            op.Log = &logger;
-
             cout << "Sector " << op.Sector << " Length " << op.Count << endl;
 
             /// 1) wait for MBR sector
@@ -74,7 +71,7 @@ void ReadEvents(const char * log)
                 }
             }
 
-            ReleaseOperationData(op);
+            Hecate::ReleaseOperationData(op);
         }
 
         ifs.close();
