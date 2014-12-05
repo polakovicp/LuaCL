@@ -39,6 +39,7 @@
 		<Unit filename="hecate.hpp" />
 		<Unit filename="inode.cpp" />
 		<Unit filename="inode.hpp" />
+		<Unit filename="log.hpp" />
 		<Unit filename="mft.cpp" />
 		<Unit filename="ntfs.hpp" />
 		<Unit filename="operation.cpp" />
@@ -51,6 +52,7 @@
 		<Extensions>
 			<code_completion />
 			<debugger />
+			<envvars />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>
