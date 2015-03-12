@@ -1,5 +1,7 @@
 #include "pphive.h"
 
+PyObject * HiveError;
+
 PyObject * get_module(const char * name)
 {
 	PyObject * modDict = PyImport_GetModuleDict();
