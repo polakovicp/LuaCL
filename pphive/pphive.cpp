@@ -77,8 +77,6 @@ inline bool add_type(PyObject * m, PyTypeObject * o, const char * n)
 
 PyMODINIT_FUNC PyInit_pphive(void)
 {
-    PyObject * HiveError = NULL;
-
     PyObject * module;
 
     if(!init_type(&PyHive_Type))
